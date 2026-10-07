@@ -27,6 +27,22 @@
   .heroimg img{width:100%}
   .wm{font-size:11.5px;color:var(--tx3);margin:0 0 30px}
 
+  .topicrow{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 26px}
+  .topicrow span{font-size:12.5px;padding:4px 11px;border:1px solid var(--line2);
+    border-radius:20px;background:#fff;color:var(--tx2);white-space:nowrap}
+  .topicrow span.k{background:var(--tx);border-color:var(--tx);color:#fff}
+
+  details{border:1px solid var(--line);border-radius:12px;background:#fff;padding:0;overflow:hidden}
+  details + details{margin-top:12px}
+  details summary{cursor:pointer;padding:15px 20px;font-size:15px;font-weight:600;
+    list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"+";font-size:19px;font-weight:400;color:var(--tx3);line-height:1}
+  details[open] summary::after{content:"–"}
+  details summary:hover{background:#faf9f7}
+  details .body{padding:0 20px 18px}
+  details .sub{margin:0 0 14px}
+
   .cta{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
   .cta a{display:inline-block;padding:11px 22px;border-radius:9px;font-size:14px;
     text-decoration:none;border:1px solid var(--tx)}
@@ -57,6 +73,7 @@
   .p5{background:#fcebeb;color:#a32d2d}
 
   .honest{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  details .honest{border:0;background:#faf9f7;padding:14px 16px;border-radius:9px}
   .honest ul{margin:0;padding-left:20px}
   .honest li{font-size:13.8px;color:var(--tx2);margin-bottom:7px}
   .honest li:last-child{margin-bottom:0}
@@ -78,11 +95,16 @@
      它去 B站、知乎、微信读书三个源真实取数，排成一条有先后顺序的路——
      每一步都说明「解决什么问题、为什么排在这个位置、看哪一段」。</p>
   <div class="heroimg"><img src="assets/cover.jpg?v=2" alt="从起点到终点的路径示意"></div>
+  <div class="topicrow">
+    <span class="k">已跑好的主题</span>
+    <span>Python</span><span>机器学习</span><span>线性代数</span><span>考研英语</span>
+    <span>摄影</span><span>Excel</span><span>吉他</span><span>心理学</span>
+  </div>
   <div class="cta">
     <a class="primary" href="demo.html">打开演示（真实数据）</a>
-    <a class="ghost" href="#how">看它是怎么算的</a>
+    <a class="ghost" href="demo.html">直接挑一个主题看</a>
   </div>
-  <p class="ctahint">演示里已经跑好 4 组主题，可以直接切换水平、目标和时长看不同结果。</p>
+  <p class="ctahint">演示里已经跑好 8 个跨领域主题，可以切换水平、目标和时长看不同结果。</p>
 </header>
 
 <section>
@@ -120,8 +142,10 @@
 </section>
 
 <section id="how">
-  <h2>它是怎么算的</h2>
-  <p class="sub">没有黑箱，规则就三句话。</p>
+  <details>
+    <summary>它是怎么算的</summary>
+    <div class="body">
+    <p class="sub">没有黑箱，规则就三句话。</p>
   <table>
     <tr><th style="width:88px">环节</th><th>规则</th></tr>
     <tr>
@@ -141,12 +165,14 @@
           想搞懂原理，原理和体系占大头，动手退成验证。</td>
     </tr>
   </table>
-</section>
+    </div>
+  </details>
 
-<section>
-  <h2>它做不到什么</h2>
-  <p class="sub">先说清楚，省得你按自己的想象用。</p>
-  <div class="honest">
+  <details>
+    <summary>它做不到什么（先看这个再用）</summary>
+    <div class="body">
+    <p class="sub">先说清楚，省得你按自己的想象用。</p>
+    <div class="honest">
     <ul>
       <li><strong>时长是估的，不是准的。</strong>视频按分 P 的真实时长算，书按 400 字/分钟折算，文章按字数。
           你的实际速度可能差一半。</li>
@@ -154,11 +180,15 @@
           不代表第一名比第五名更好。</li>
       <li><strong>三源的配额有限。</strong>知乎的搜索接口跑二十来次就会超配额，微信读书连续请求会被限流十分钟。
           所以演示用的是预生成好的结果，不承诺任意主题实时出。</li>
+      <li><strong>演示里部分主题暂时没有文章。</strong>铺到 8 个主题时把知乎的日配额打满了，
+          其中 6 个主题只有视频和书。每页顶部会如实标出这一趟哪几个源可用——不是「缺了没告诉你」。</li>
       <li><strong>书只能按章切。</strong>最后一步可能略微超出你给的时间，因为一章读一半没有意义。</li>
       <li><strong>标题判断角色会出错。</strong>页面上每步都写了「定位依据」，
           你可以自己判断这条判得对不对，不对就跳过它。</li>
     </ul>
-  </div>
+    </div>
+    </div>
+  </details>
 </section>
 
 <section>
