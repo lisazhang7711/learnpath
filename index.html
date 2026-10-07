@@ -96,16 +96,16 @@
      每一步都说明「解决什么问题、为什么排在这个位置、看哪一段」。</p>
   <div class="heroimg"><img src="assets/cover.jpg?v=2" alt="从起点到终点的路径示意"></div>
   <div class="topicrow">
-    <span class="k">已跑好 28 个主题</span>
+    <span class="k">已跑好 52 个主题</span>
     <span>Python</span><span>机器学习</span><span>线性代数</span><span>微积分</span>
     <span>考研英语</span><span>摄影</span><span>视频剪辑</span><span>吉他</span>
     <span>健身</span><span>Excel</span><span>烹饪</span><span>心理学</span><span>…</span>
   </div>
   <div class="cta">
     <a class="primary" href="demo.html">打开演示（真实数据）</a>
-    <a class="ghost" href="demo.html">直接挑一个主题看</a>
+    <a class="ghost" href="topics.html">按分类浏览全部 52 个主题</a>
   </div>
-  <p class="ctahint">演示里已经跑好 28 个跨领域主题，可以切换水平和目标看不同结果；顶部有搜索框筛主题。</p>
+  <p class="ctahint">演示里已经跑好 52 个跨领域主题，可以切换水平和目标看不同结果；顶部有搜索框筛主题，目录页按九个分类分组。</p>
 </header>
 
 <section>
@@ -182,11 +182,11 @@
       <li><strong>三源的配额有限。</strong>知乎的搜索接口跑二十来次就会超配额，微信读书连续请求会被限流十分钟。
           所以演示用的是预生成好的结果，不承诺任意主题实时出。</li>
       <li><strong>演示里大部分主题暂时没有文章。</strong>知乎搜索是日配额（约二十次就打满），
-          铺 28 个主题时只有 2 个拿到了文章，其余靠视频和书补位。每页顶部会标出这一趟哪几个源可用——
+          铺 52 个主题时只有 2 个拿到了文章，其余靠视频和书补位（52 个里 46 个有书）。每页顶部会标出这一趟哪几个源可用——
           不是「缺了没告诉你」。配额恢复后会补。</li>
-      <li><strong>主题是预先跑好的一批，不是任意输入。</strong>线上跑不了实时取数
-          （知乎和微信读书的凭证不能放进网页，静态托管也跑不了 Python），所以是 28 个主题的主题库。
-          要任意主题，得用本地版。</li>
+      <li><strong>主题是预先跑好的一批，不是任意输入。</strong>这一点实测过：B站 带 Origin 直接 403
+          （连取签名要用到的接口都挡），微信读书的跨域只允许它自己的域名，知乎虽然允许跨域但凭证不能放进网页
+          （访客查一下源码就能拿走）。所以线上是 52 个主题的主题库，不是任意输入。要任意主题，得用本地版。</li>
       <li><strong>书只能按章切。</strong>最后一步可能略微超出你给的时间，因为一章读一半没有意义。</li>
       <li><strong>标题判断角色会出错。</strong>页面上每步都写了「定位依据」，
           你可以自己判断这条判得对不对，不对就跳过它。</li>
@@ -207,6 +207,7 @@
 <footer>
   <div class="cta" style="margin-bottom:18px">
     <a class="primary" href="demo.html" target="_blank" rel="noopener">全屏打开演示</a>
+    <a class="ghost" href="topics.html">全部主题目录</a>
   </div>
   数据来源：B站搜索接口、知乎开放平台、微信读书 Agent 网关。演示中的条目均可点击跳转到原内容。<br>
   页面为静态产物，不含追踪脚本，不收集任何信息。

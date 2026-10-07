@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>全部主题 · 学习路径</title>
+<style>
+:root{--bg:#faf9f7;--tx:#1f1d1a;--tx2:#5b564f;--tx3:#8d877e;--line:#e7e2da;--line2:#d6cfc4;--ac:#8a6a4b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);
+ font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:940px;margin:0 auto;padding:38px 20px 60px}
+h1{font-size:26px;margin:0 0 8px;letter-spacing:-.3px}
+.sub{color:var(--tx2);font-size:14px;margin:0 0 20px}
+a{color:var(--ac)}
+.back{font-size:13px;color:var(--tx3);text-decoration:none}
+.back:hover{color:var(--ac)}
+input{width:100%;max-width:380px;padding:9px 13px;font-size:14px;border:1px solid var(--line2);
+ border-radius:9px;background:#fff;color:var(--tx);margin:0 0 6px}
+.hint{font-size:12px;color:var(--tx3);margin:0 0 24px}
+.cat{margin:0 0 26px}
+.cat h2{font-size:14px;color:var(--tx3);font-weight:600;margin:0 0 10px;
+ letter-spacing:.4px;display:flex;align-items:center;gap:8px}
+.cat h2 span{color:var(--tx3);font-weight:400;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:9px}
+a.card{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;
+ padding:11px 13px;text-decoration:none;color:var(--tx);transition:.15s}
+a.card:hover{border-color:var(--ac);transform:translateY(-1px)}
+a.card b{display:block;font-size:14px;font-weight:600;margin-bottom:3px}
+a.card i{font-style:normal;font-size:11px;color:var(--tx3)}
+.tags{margin-top:6px;display:flex;gap:4px;flex-wrap:wrap}
+.tags em{font-style:normal;font-size:10px;padding:1px 5px;border-radius:4px;
+ background:#f2eee8;color:var(--tx3)}
+.tags em.on{background:#e8eef0;color:#4a6a74}
+.empty{color:var(--tx3);font-size:13px;padding:20px 0}
+.sum{margin:0 0 14px;font-size:13px;color:var(--tx2)}
+</style></head><body><div class="wrap">
+<a class="back" href="./">&larr; 回到首页</a>
+<h1 style="margin-top:14px">全部主题</h1>
+<p class="sub">每个主题都是从 B站 / 知乎 / 微信读书真实取数后编排好的。点进去可以切水平和目标，同一批资料会排出不一样的路径。</p>
+<input type="text" id="q" placeholder="搜索主题…（试试「数学」「英语」「设计」）">
+<p class="hint" id="hint"></p>
+<div id="list"></div>
+</div>
+<script>
+const DATA = [{"topic": "Python 入门", "hours": 5, "kw": "python 编程 代码 爬虫", "file": "library/Python_入门.json", "cat": "编程 · AI", "has_article": true, "v": 8, "b": 4, "a": 10}, {"topic": "机器学习", "hours": 3, "kw": "ml 人工智能 ai 算法", "file": "library/机器学习.json", "cat": "编程 · AI", "has_article": true, "v": 8, "b": 4, "a": 10}, {"topic": "深度学习", "hours": 4, "kw": "神经网络 pytorch 神经网络", "file": "library/深度学习.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "数据结构", "hours": 4, "kw": "链表 树 图 算法", "file": "library/数据结构.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "算法", "hours": 4, "kw": "leetcode 刷题 动态规划 面试", "file": "library/算法.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "前端开发", "hours": 4, "kw": "html css javascript 网页", "file": "library/前端开发.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "SQL", "hours": 3, "kw": "数据库 查询 mysql", "file": "library/SQL.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "C 语言", "hours": 4, "kw": "c语言 编程 指针", "file": "library/C_语言.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 0, "a": 0}, {"topic": "Java", "hours": 4, "kw": "java 后端 spring 编程", "file": "library/Java.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "Linux", "hours": 3, "kw": "linux 命令行 运维 shell", "file": "library/Linux.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "Git", "hours": 2, "kw": "git 版本管理 github", "file": "library/Git.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "大模型", "hours": 3, "kw": "llm gpt 提示词 大模型", "file": "library/大模型.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "计算机组成原理", "hours": 4, "kw": "计组 cpu 存储器 计组", "file": "library/计算机组成原理.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "操作系统", "hours": 4, "kw": "os 进程 线程 内存", "file": "library/操作系统.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "计算机网络", "hours": 4, "kw": "tcp ip 网络 协议", "file": "library/计算机网络.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "网络安全", "hours": 3, "kw": "渗透 漏洞 ctf 安全", "file": "library/网络安全.json", "cat": "编程 · AI", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "线性代数", "hours": 4, "kw": "矩阵 向量 数学", "file": "library/线性代数.json", "cat": "数学 · 理科", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "微积分", "hours": 5, "kw": "导数 积分 高数 数学", "file": "library/微积分.json", "cat": "数学 · 理科", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "概率统计", "hours": 4, "kw": "概率 分布 统计 数学", "file": "library/概率统计.json", "cat": "数学 · 理科", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "离散数学", "hours": 3, "kw": "逻辑 图论 集合 数学", "file": "library/离散数学.json", "cat": "数学 · 理科", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "数学建模", "hours": 3, "kw": "建模 matlab 数学建模 竞赛", "file": "library/数学建模.json", "cat": "数学 · 理科", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "考研数学", "hours": 8, "kw": "高数 线代 概率 考研", "file": "library/考研数学.json", "cat": "数学 · 理科", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "大学物理", "hours": 4, "kw": "力学 电磁 物理 大物", "file": "library/大学物理.json", "cat": "数学 · 理科", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "有机化学", "hours": 3, "kw": "化学 有机 反应 机理", "file": "library/有机化学.json", "cat": "数学 · 理科", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "英语口语", "hours": 3, "kw": "英语 发音 对话 雅思", "file": "library/英语口语.json", "cat": "语言 · 考试", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "考研英语", "hours": 6, "kw": "英语 单词 阅读 考研", "file": "library/考研英语.json", "cat": "语言 · 考试", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "雅思", "hours": 3, "kw": "ielts 雅思 留学 英语", "file": "library/雅思.json", "cat": "语言 · 考试", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "公文写作", "hours": 2, "kw": "公文 材料 笔杆子 写作", "file": "library/公文写作.json", "cat": "语言 · 考试", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "摄影", "hours": 2, "kw": "拍照 相机 构图 单反", "file": "library/摄影.json", "cat": "设计 · 创作", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "视频剪辑", "hours": 3, "kw": "pr 剪映 后期 剪辑", "file": "library/视频剪辑.json", "cat": "设计 · 创作", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "Photoshop", "hours": 3, "kw": "ps 修图 平面 设计", "file": "library/Photoshop.json", "cat": "设计 · 创作", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "UI 设计", "hours": 3, "kw": "界面 交互 设计 figma", "file": "library/UI_设计.json", "cat": "设计 · 创作", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "绘画", "hours": 3, "kw": "素描 画画 手绘 板绘", "file": "library/绘画.json", "cat": "设计 · 创作", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "书法", "hours": 2, "kw": "毛笔 硬笔 练字 楷书", "file": "library/书法.json", "cat": "设计 · 创作", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "3D 建模", "hours": 3, "kw": "blender 建模 三维 c4d", "file": "library/3D_建模.json", "cat": "设计 · 创作", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "吉他", "hours": 2, "kw": "民谣 弹唱 和弦 乐器", "file": "library/吉他.json", "cat": "音乐 · 艺术", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "乐理", "hours": 2, "kw": "音乐 五线谱 音阶", "file": "library/乐理.json", "cat": "音乐 · 艺术", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "健身", "hours": 2, "kw": "增肌 减脂 训练 力量", "file": "library/健身.json", "cat": "生活 · 健康", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "烹饪", "hours": 2, "kw": "做菜 厨艺 家常菜", "file": "library/烹饪.json", "cat": "生活 · 健康", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "理财", "hours": 2, "kw": "基金 投资 股票 财务", "file": "library/理财.json", "cat": "生活 · 健康", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "Excel", "hours": 3, "kw": "表格 函数 数据透视 办公", "file": "library/Excel.json", "cat": "职场 · 商业", "has_article": false, "v": 8, "b": 4, "a": 0}, {"topic": "PPT", "hours": 2, "kw": "演示 幻灯片 汇报 办公", "file": "library/PPT.json", "cat": "职场 · 商业", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "数据分析", "hours": 4, "kw": "分析 excel python 可视化", "file": "library/数据分析.json", "cat": "职场 · 商业", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "产品经理", "hours": 3, "kw": "pm 需求 原型 互联网", "file": "library/产品经理.json", "cat": "职场 · 商业", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "写作", "hours": 3, "kw": "文案 写作 表达", "file": "library/写作.json", "cat": "职场 · 商业", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "演讲", "hours": 2, "kw": "口才 表达 汇报 沟通", "file": "library/演讲.json", "cat": "职场 · 商业", "has_article": false, "v": 8, "b": 6, "a": 0}, {"topic": "项目管理", "hours": 3, "kw": "pmp 项目 进度 敏捷", "file": "library/项目管理.json", "cat": "职场 · 商业", "has_article": false, "v": 8, "b": 0, "a": 0}, {"topic": "信号与系统", "hours": 4, "kw": "信号 系统 傅里叶 卷积", "file": "library/信号与系统.json", "cat": "工程 · 硬件", "has_article": false, "v": 8, "b": 0, "a": 0}, {"topic": "心理学入门", "hours": 3, "kw": "心理 认知 行为", "file": "library/心理学入门.json", "cat": "人文 · 社科", "has_article": false, "v": 8, "b": 5, "a": 0}, {"topic": "经济学入门", "hours": 4, "kw": "微观 宏观 经济 供需", "file": "library/经济学入门.json", "cat": "人文 · 社科", "has_article": false, "v": 8, "b": 0, "a": 0}, {"topic": "哲学入门", "hours": 3, "kw": "哲学 西方哲学 思想 伦理", "file": "library/哲学入门.json", "cat": "人文 · 社科", "has_article": false, "v": 8, "b": 0, "a": 0}, {"topic": "法律常识", "hours": 2, "kw": "法律 民法 普法 权益", "file": "library/法律常识.json", "cat": "人文 · 社科", "has_article": false, "v": 8, "b": 0, "a": 0}];
+const CATS = ["编程 · AI", "数学 · 理科", "语言 · 考试", "设计 · 创作", "音乐 · 艺术", "生活 · 健康", "职场 · 商业", "工程 · 硬件", "人文 · 社科"];
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function render(){
+  const k = (document.getElementById('q').value||'').trim().toLowerCase();
+  const hit = DATA.filter(d => !k || (d.topic+' '+(d.kw||'')+' '+d.cat).toLowerCase().includes(k));
+  document.getElementById('hint').textContent = k ? ('匹配 '+hit.length+' 个') : ('共 '+DATA.length+' 个主题');
+  if(!hit.length){ document.getElementById('list').innerHTML =
+    '<div class="empty">没有匹配的主题。</div>'; return; }
+  document.getElementById('list').innerHTML = CATS.map(c => {
+    const items = hit.filter(d => d.cat === c);
+    if(!items.length) return '';
+    return '<div class="cat"><h2>'+esc(c)+'<span>'+items.length+'</span></h2><div class="grid">'
+      + items.map(d => {
+          let tg = '<em class="on">'+d.v+' 视频</em>';
+          if(d.b) tg += '<em class="on">'+d.b+' 书</em>';
+          if(d.a) tg += '<em class="on">'+d.a+' 文</em>';
+          return '<a class="card" href="demo.html?topic='+encodeURIComponent(d.topic)+'">'
+            + '<b>'+esc(d.topic)+'</b><i>默认 '+d.hours+' 小时</i>'
+            + '<div class="tags">'+tg+'</div></a>';
+        }).join('')
+      + '</div></div>';
+  }).join('');
+}
+document.getElementById('q').oninput = render;
+render();
+</script></body></html>
