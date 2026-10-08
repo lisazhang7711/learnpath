@@ -27,6 +27,16 @@
     background:#fff;color:var(--tx2);text-decoration:none}
   .modes a.on{background:var(--tx);border-color:var(--tx);color:#fff}
 
+  /* 三件事 · 并列 */
+  .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 12px}
+  .trio .t{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+  .trio .th{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+  .trio .n{flex:0 0 20px;height:20px;border-radius:50%;background:var(--tx);color:#fff;
+    font-size:11.5px;font-weight:500;display:flex;align-items:center;justify-content:center}
+  .trio h3{font-size:13.5px;font-weight:600;margin:0}
+  .trio p{margin:0;font-size:12.4px;color:var(--tx2);line-height:1.68}
+  @media (max-width:640px){ .trio{grid-template-columns:1fr} }
+
   textarea{width:100%;min-height:150px;padding:12px 14px;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     border:1px solid var(--line2);border-radius:10px;background:#fff;color:var(--tx);resize:vertical}
   textarea:focus{outline:none;border-color:var(--tx2)}
@@ -111,9 +121,24 @@
   </div>
 
   <h1>已收藏：把你收藏过的东西排成一条路</h1>
-  <p class="sub">粘贴 5–10 个链接（B站 / 知乎 / 微信 / 微信读书都行），它做三件事：<b>去重</b>（同一个视频收藏两次、同一个系列的两集）、
-    <b>补缺口</b>（没有入门就先入门，没有实操就补实操）、<b>排优先级</b>（按认知顺序，不是按收藏时间）。
-    全部在你的浏览器里算，链接不会上传到任何地方。</p>
+  <p class="sub">粘贴 5–10 个链接（B站 / 知乎 / 微信 / 微信读书都行），它在你的浏览器里做三件事：</p>
+
+  <div class="trio">
+    <div class="t">
+      <div class="th"><span class="n">1</span><h3>去重</h3></div>
+      <p>同一个视频收藏两次、同一个系列的两集（P1 / P2、上 / 下），合并成一条，并列出被合并掉了哪些。</p>
+    </div>
+    <div class="t">
+      <div class="th"><span class="n">2</span><h3>补缺口</h3></div>
+      <p>没有入门就先补入门，没有实操就补实操。缺哪一步直接点名，并给出该去搜什么词。</p>
+    </div>
+    <div class="t">
+      <div class="th"><span class="n">3</span><h3>排优先级</h3></div>
+      <p>按认知顺序排，不是按收藏时间——先建立地图，再搭骨架，再动手，最后看别人踩过的坑。</p>
+    </div>
+  </div>
+
+  <p class="hint">链接不上传、不联网，上一次粘贴的内容存在你自己的浏览器里。</p>
 
   <textarea id="raw" placeholder="每行粘一个链接，或者直接从收藏夹页面整段复制（标题 + 链接都带过来）。&#10;&#10;例：&#10;零基础Python入门教程 https://www.bilibili.com/video/BV1xx411c7mD&#10;https://www.bilibili.com/video/BV1xx411c7mD&#10;https://zhihu.com/question/12345678/answer/987654321"></textarea>
   <p class="hint">支持的形式：纯链接、<code>标题 + 链接</code>、<code>标题换行链接</code>、整段带其它文字的复制内容（会自动把 URL 抠出来）。
