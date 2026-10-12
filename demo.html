@@ -79,6 +79,23 @@
   .ev{font-size:11.5px;color:var(--tx3);margin-top:4px}
   .foot{margin-top:28px;font-size:12px;color:var(--tx3);line-height:1.7;
     border-top:1px solid var(--line);padding-top:14px}
+  /* 路径保存 / 分享 */
+  .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 14px}
+  .btn{padding:6px 12px;font-size:12.5px;border:1px solid var(--line2);border-radius:8px;
+    background:#fff;color:var(--tx2);cursor:pointer}
+  .btn:hover{border-color:var(--tx2);color:var(--tx)}
+  .hint{font-size:12px;color:var(--tx3)}
+  .mine{margin:0 0 14px;border:1px solid var(--line);border-radius:12px;
+    background:var(--card);padding:10px 14px}
+  .mtitle{font-size:12px;color:var(--tx3);margin-bottom:6px}
+  .mrow{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--line)}
+  .mrow:first-of-type{border-top:0}
+  .mopen{flex:1;min-width:0;text-align:left;background:none;border:0;cursor:pointer;
+    font:inherit;font-size:13px;color:var(--tx);padding:2px 0}
+  .mopen:hover{color:var(--video);text-decoration:underline}
+  .mtime{font-size:11.5px;color:var(--tx3);flex:0 0 auto}
+  .mdel{background:none;border:0;cursor:pointer;color:var(--tx3);font-size:14px;line-height:1;padding:2px 4px}
+  .mdel:hover{color:#a32d2d}
 </style>
 </head>
 <body>
@@ -91,6 +108,12 @@
   <div class="tabs2" id="levels"></div>
   <p class="glabel">你想通过这次学习达成什么</p>
   <div class="tabs2" id="goals"></div>
+  <div class="bar">
+    <button id="btn-share" class="btn" type="button">复制这条路径的链接</button>
+    <button id="btn-save" class="btn" type="button">保存这条路</button>
+    <span class="hint" id="save-hint"></span>
+  </div>
+  <div class="mine" id="mine" style="display:none"></div>
   <div id="srcbar" class="srcbar"></div>
   <div id="out"></div>
   <div class="foot" id="foot"></div>
@@ -139,6 +162,13 @@ renderTabs();
 
 const GOALS = DATA[0].goal_list;
 const LEVELS = DATA[0].level_list;
+// 分享链接里带了 level / goal 就按链接还原（?topic=X&level=zero&goal=balanced）
+(function(){
+  var sp = new URLSearchParams(location.search);
+  var lv = sp.get('level'), gl = sp.get('goal');
+  if(lv && LEVELS.some(function(g){return g.key===lv;})) level = lv;
+  if(gl && GOALS.some(function(g){return g.key===gl;})) goal = gl;
+})();
 document.getElementById('goals').innerHTML = GOALS.map(g =>
   `<button data-g="${g.key}" class="${g.key===goal?'on':''}" title="${esc(g.desc)}">${esc(g.label)}</button>`).join('');
 document.querySelectorAll('#goals button').forEach(b => b.onclick = () => {
@@ -226,7 +256,106 @@ function render(){
     + '<b>目标</b>决定排什么顺序、每类占多少时间：'
     + GOALS.map(g => `<b>${esc(g.label)}</b>＝${esc(g.desc)}`).join('；')
     + '。<br>角色由标题关键词判定，没命中时按载体兜底（视频→动手 / 书→体系 / 文章→定向）。';
+  updateUrl(); savePath();
 }
+
+/* ---------- 路径永久有效：本地保存 + 分享链接（零后端） ----------
+   状态就三个变量（主题 / 水平 / 目标），所以一条链接能完整还原一条路径；
+   每次排完另外自动记一份到 localStorage，换设备时用上面那条链接打开即可。 */
+var LS_KEY = 'lp_paths_v1';
+function curState(){
+  var d = DATA[idx];
+  return { topic: d ? d.topic : '', level: level, goal: goal, ts: Date.now() };
+}
+function updateUrl(){
+  if(!history.replaceState) return;
+  var s0 = curState();
+  history.replaceState(null, '', '?topic=' + encodeURIComponent(s0.topic)
+    + '&level=' + encodeURIComponent(s0.level) + '&goal=' + encodeURIComponent(s0.goal));
+}
+function shareUrl(){
+  var s0 = curState();
+  var u = new URL(location.href);
+  u.search = '?topic=' + encodeURIComponent(s0.topic)
+    + '&level=' + encodeURIComponent(s0.level) + '&goal=' + encodeURIComponent(s0.goal);
+  return u.toString();
+}
+function paths(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch(e){ return []; }
+}
+function savePath(){
+  var s0 = curState();
+  if(!s0.topic) return;
+  var arr = paths().filter(function(p){
+    return !(p.topic === s0.topic && p.level === s0.level && p.goal === s0.goal);
+  });
+  arr.unshift(s0);
+  arr = arr.slice(0, 20);
+  try { localStorage.setItem(LS_KEY, JSON.stringify(arr)); } catch(e){}
+  renderMine();
+}
+function delPath(i){
+  var arr = paths(); arr.splice(i, 1);
+  try { localStorage.setItem(LS_KEY, JSON.stringify(arr)); } catch(e){}
+  renderMine();
+}
+function goPath(p){
+  var m = DATA.findIndex(function(d){ return d.topic === p.topic; });
+  if(m >= 0) idx = m;
+  level = p.level || 'zero'; goal = p.goal || 'balanced';
+  renderTabs();
+  document.querySelectorAll('#levels button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.l === level);
+  });
+  document.querySelectorAll('#goals button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.g === goal);
+  });
+  load();
+}
+function fmt(ts){
+  var diff = Date.now() - ts;
+  if(diff < 60000) return '刚刚';
+  if(diff < 3600000) return Math.floor(diff / 60000) + ' 分钟前';
+  if(diff < 86400000) return Math.floor(diff / 3600000) + ' 小时前';
+  var d = new Date(ts);
+  return (d.getMonth() + 1) + '/' + d.getDate();
+}
+function renderMine(){
+  var arr = paths(), box = document.getElementById('mine');
+  if(!arr.length){ box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = '';
+  var lm = function(k){ var g = LEVELS.filter(function(x){return x.key===k;})[0]; return g ? g.label : k; };
+  var gm = function(k){ var g = GOALS.filter(function(x){return x.key===k;})[0]; return g ? g.label : k; };
+  box.innerHTML = '<div class="mtitle">我保存的路径（' + arr.length + '）· 存在这台设备上；换设备请用上面的链接打开</div>'
+    + arr.map(function(p, i){
+        return '<div class="mrow"><button class="mopen" data-i="' + i + '">' + esc(p.topic)
+          + ' · ' + esc(lm(p.level)) + ' · ' + esc(gm(p.goal)) + '</button>'
+          + '<span class="mtime">' + fmt(p.ts) + '</span>'
+          + '<button class="mdel" data-i="' + i + '" title="删除">×</button></div>';
+      }).join('');
+  box.querySelectorAll('.mopen').forEach(function(b){
+    b.onclick = function(){ var p = paths()[+b.dataset.i]; if(p) goPath(p); };
+  });
+  box.querySelectorAll('.mdel').forEach(function(b){
+    b.onclick = function(){ delPath(+b.dataset.i); };
+  });
+}
+function hint(msg){
+  var el = document.getElementById('save-hint');
+  el.textContent = msg;
+  clearTimeout(hint._t);
+  hint._t = setTimeout(function(){ el.textContent = ''; }, 2600);
+}
+document.getElementById('btn-share').onclick = function(){
+  var url = shareUrl(), ok = function(){ hint('链接已复制，发给别人或存备忘录就能再打开这条路径'); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(ok, function(){ prompt('复制这条链接：', url); });
+  } else { prompt('复制这条链接：', url); }
+};
+document.getElementById('btn-save').onclick = function(){
+  savePath(); hint('已保存到「我保存的路径」（' + paths().length + ' 条）');
+};
+renderMine();
 load();
 </script>
 </body>
